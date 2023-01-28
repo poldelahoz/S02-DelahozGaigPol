@@ -1,4 +1,4 @@
--- QUERIES TIENDA
+-- TIENDA
 -- 1
 SELECT nombre FROM producto;
 -- 2
@@ -65,10 +65,24 @@ SELECT p.nombre, p.precio FROM producto p INNER JOIN fabricante f ON p.codigo_fa
 SELECT p.nombre, p.precio FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE p.precio >= 180 ORDER BY p.precio DESC, p.nombre ASC;
 -- 33
 SELECT f.codigo, f.nombre FROM fabricante f WHERE f.codigo IN (SELECT codigo_fabricante FROM producto);
-
+-- 34
+SELECT f.nombre AS "Fabricante", p.nombre AS "Producto" FROM fabricante f LEFT JOIN producto p ON f.codigo = p.codigo_fabricante ORDER BY f.nombre;
+-- 35
+SELECT f.nombre AS "Fabricante" FROM fabricante f LEFT JOIN producto p ON f.codigo = p.codigo_fabricante WHERE p.nombre IS NULL ORDER BY f.nombre;
+-- 36
+SELECT * FROM producto WHERE codigo_fabricante = (SELECT codigo FROM fabricante WHERE nombre = "Lenovo");
+-- 37
+SELECT * FROM producto p WHERE p.precio = (SELECT precio FROM producto WHERE codigo_fabricante = (SELECT f.codigo FROM fabricante f WHERE f.nombre = "Lenovo") ORDER BY p.precio DESC LIMIT 1);
+-- 38
+SELECT p.nombre FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre = "Lenovo" ORDER BY p.precio DESC LIMIT 1;
+-- 39
+SELECT p.nombre FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre = "Hewlett-Packard" ORDER BY p.precio ASC LIMIT 1;
+-- 40
+SELECT p.nombre, p.precio FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE p.precio >= (SELECT p.precio FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre = "Lenovo" ORDER BY p.precio DESC LIMIT 1);
+-- 41
+SET @total_price = (select SUM(precio) from producto), @total_products = (select count(*) from producto); SELECT p.nombre FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre = "Asus" AND p.precio > (select @total_price / @total_products);
 
 -- QUERIES UNIVERSIDAD
-USE universidad;
 -- 1
 SELECT apellido1, apellido2, nombre FROM persona WHERE tipo = "alumno" ORDER BY apellido1 ASC, apellido2 ASC, nombre ASC;
 -- 2
@@ -124,44 +138,6 @@ SELECT ce.anyo_inicio, COUNT(ama.id_alumno) AS "Nº alumnos matriculados" FROM a
 -- 9
 SELECT p.id, p.apellido1, p.apellido2, COUNT(a.id) AS "Nº asignaturas" FROM persona p LEFT JOIN asignatura a ON a.id_profesor = p.id WHERE p.tipo = "profesor" GROUP BY p.id ORDER BY COUNT(a.id) DESC;
 -- 10
--- ESPERANT RESPOSTA PROFESSOR DE FORUM
-SELECT * FROM persona p
-LEFT JOIN alumno_se_matricula_asignatura ama ON ama.id_alumno = p.id
-LEFT JOIN curso_escolar ce ON ama.id_curso_escolar = ce.id
-LEFT JOIN asignatura a ON ama.id_asignatura = a.id
-LEFT JOIN grado g ON a.id_grado = g.id
-WHERE p.tipo = "alumno"
-ORDER BY p.fecha_nacimiento DESC LIMIT 1;
+SELECT * FROM persona p WHERE p.tipo = "alumno" ORDER BY p.fecha_nacimiento DESC LIMIT 1;
 -- 11
 SELECT p.apellido1, p.apellido2, p.nombre FROM profesor pr INNER JOIN  persona p ON p.id = pr.id_profesor LEFT JOIN asignatura a ON a.id_profesor = pr.id_profesor WHERE p.tipo = "profesor" AND a.nombre IS NULL;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
