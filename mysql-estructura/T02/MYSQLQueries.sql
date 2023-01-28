@@ -49,6 +49,23 @@ SELECT p.codigo AS "Codigo Producto", p.nombre AS "Producto", f.codigo AS "Codig
 SELECT p.nombre AS "Producto", p.precio AS "Precio", f.nombre AS "Fabricante" FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo ORDER BY p.precio ASC LIMIT 1;
 -- 25
 SELECT p.nombre AS "Producto", p.precio AS "Precio", f.nombre AS "Fabricante" FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo ORDER BY p.precio DESC LIMIT 1;
+-- 26
+SELECT p.codigo, p.nombre, p.precio, f.nombre as "fabricante" FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre = "Lenovo";
+-- 27
+SELECT p.codigo, p.nombre, p.precio, f.nombre as "fabricante" FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre = "Crucial" AND p.precio > 200;
+-- 28
+SELECT p.codigo, p.nombre, p.precio, f.nombre as "fabricante" FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre = "Asus" OR f.nombre = "Hewlett-Packard" oR f.nombre = "Seagate";
+-- 29
+SELECT p.codigo, p.nombre, p.precio, f.nombre as "fabricante" FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre IN ("Asus","Hewlett-Packard","Seagate");
+-- 30
+SELECT p.nombre, p.precio FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE RIGHT(f.nombre, 1) = "e";
+-- 31
+SELECT p.nombre, p.precio FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre LIKE "%w%";
+-- 32
+SELECT p.nombre, p.precio FROM producto p INNER JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE p.precio >= 180 ORDER BY p.precio DESC, p.nombre ASC;
+-- 33
+SELECT f.codigo, f.nombre FROM fabricante f WHERE f.codigo IN (SELECT codigo_fabricante FROM producto);
+
 
 -- QUERIES UNIVERSIDAD
 USE universidad;
@@ -108,7 +125,13 @@ SELECT ce.anyo_inicio, COUNT(ama.id_alumno) AS "Nº alumnos matriculados" FROM a
 SELECT p.id, p.apellido1, p.apellido2, COUNT(a.id) AS "Nº asignaturas" FROM persona p LEFT JOIN asignatura a ON a.id_profesor = p.id WHERE p.tipo = "profesor" GROUP BY p.id ORDER BY COUNT(a.id) DESC;
 -- 10
 -- ESPERANT RESPOSTA PROFESSOR DE FORUM
-SELECT * FROM persona p WHERE p.tipo = "alumno" ORDER BY p.fecha_nacimiento DESC LIMIT 1;
+SELECT * FROM persona p
+LEFT JOIN alumno_se_matricula_asignatura ama ON ama.id_alumno = p.id
+LEFT JOIN curso_escolar ce ON ama.id_curso_escolar = ce.id
+LEFT JOIN asignatura a ON ama.id_asignatura = a.id
+LEFT JOIN grado g ON a.id_grado = g.id
+WHERE p.tipo = "alumno"
+ORDER BY p.fecha_nacimiento DESC LIMIT 1;
 -- 11
 SELECT p.apellido1, p.apellido2, p.nombre FROM profesor pr INNER JOIN  persona p ON p.id = pr.id_profesor LEFT JOIN asignatura a ON a.id_profesor = pr.id_profesor WHERE p.tipo = "profesor" AND a.nombre IS NULL;
 
