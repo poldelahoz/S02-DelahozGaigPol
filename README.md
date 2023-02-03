@@ -13,3 +13,8 @@ Repositori organitzat mitjaçant GitFlow.
 * Es genera un _TAG_ amb el número de Tasca i Nivell a la branca _master_ per a cada tasca/nivell que el professor hagi avaluat amb la màxima puntuació.
 
 #### **Tasques finalitzades:**
+* [T01N01](../master/T01N01)
+* [T01N02](../master/T01N02)
+* [T02](../master/T02)
+* [T03N01](../master/T03N01)
+* [T04N01](../master/T04N01)
